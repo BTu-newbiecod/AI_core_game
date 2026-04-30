@@ -58,6 +58,7 @@ export default function MinesweeperGame() {
   const [leaderboardKey, setLeaderboardKey] = useState(0);
   const [animatedMines, setAnimatedMines] = useState(new Set());
   const [animatedWrongFlags, setAnimatedWrongFlags] = useState(new Set());
+  const [isAiThinking, setIsAiThinking] = useState(false);
 
   const explosionTimers = useRef([]);
 
@@ -183,12 +184,14 @@ export default function MinesweeperGame() {
 
   const handleAiMove = async () => {
     if (!gameId || gameState !== "IN_PROGRESS") { appendError("No active game."); return; }
+    setIsAiThinking(true);
     try {
       const res = await postJson(`${API_BASE_URL}/${gameId}/ai-move`);
       setIsAiUsed(true);
       applyResponse(res, true);
       appendLog(formatAiLog(res));
     } catch (err) { appendError(`AI move failed — ${err.message}`); }
+    finally { setIsAiThinking(false); }
   };
 
   const meta = DIFFICULTY_META[difficulty];
@@ -240,6 +243,15 @@ export default function MinesweeperGame() {
                 {formatTimer(timeElapsed)}
               </span>
             </div>
+
+            {/* Try Again Button */}
+            <button
+              onClick={() => startGame()}
+              className="flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white rounded-xl px-4 py-2 shadow font-bold text-sm transition-colors"
+              title="Restart Game"
+            >
+              <span className="mr-1 text-lg leading-none">↺</span> Try Again
+            </button>
           </div>
 
           {/* Board — horizontally scrollable if too wide */}
@@ -267,7 +279,8 @@ export default function MinesweeperGame() {
           <AiControlPanel
             onAiPlay={handleAiMove}
             logs={logs}
-            disabled={gameState !== "IN_PROGRESS"}
+            disabled={gameState !== "IN_PROGRESS" || isAiThinking}
+            isThinking={isAiThinking}
           />
         </aside>
       </main>

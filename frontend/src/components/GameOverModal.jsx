@@ -16,14 +16,15 @@ export default function GameOverModal({
   onRestart, onScoreSubmitted,
 }) {
   const [playerName, setPlayerName] = useState("");
-  const [submitted,  setSubmitted]  = useState(false);
-  const [error,      setError]      = useState(null);
-  const [saving,     setSaving]     = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
-  if (gameState === "IN_PROGRESS") return null;
+  if (gameState === "IN_PROGRESS" || isClosed) return null;
 
-  const isWon          = gameState === "WON";
-  const canSave        = isWon && !isAiUsed;
+  const isWon = gameState === "WON";
+  const canSave = isWon && !isAiUsed;
 
   const handleConfirm = async () => {
     const name = playerName.trim();
@@ -48,12 +49,19 @@ export default function GameOverModal({
   };
 
   return (
-    <div className="fixed inset-0 flex items-end justify-center z-50 bg-black/50">
-      <div className="w-full max-w-md overflow-hidden rounded-t-3xl shadow-2xl">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 p-4">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl shadow-2xl">
 
         {/* ── Stats panel ─────────────────────────────── */}
-        <div className={`relative px-8 pt-8 pb-14 flex justify-around items-start
+        <div className={`relative px-8 pt-10 pb-14 flex justify-around items-start
           ${isWon ? "bg-sky-400" : "bg-slate-500"}`}>
+
+          <button
+            onClick={() => setIsClosed(true)}
+            className="absolute top-3 right-4 text-white/70 hover:text-white font-bold text-xl transition-colors"
+          >
+            ✕
+          </button>
 
           <div className="flex flex-col items-center gap-2">
             <div className="bg-yellow-400 w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-2xl">⏱️</div>
@@ -89,7 +97,7 @@ export default function GameOverModal({
                 </p>
               )}
               <p className="text-gray-600 text-sm text-center font-medium">
-                {isWon ? "🎉 You won! Enter your name:" : "😅 Enter your name to continue:"}
+                {isWon ? "🎉 You won! Enter your name:" : " Enter your name to continue:"}
               </p>
               <input
                 type="text"
@@ -110,7 +118,7 @@ export default function GameOverModal({
                            disabled:text-gray-400 text-[#3a5a00] font-bold py-2.5 rounded-xl
                            transition-colors border-2 border-[#8eb228] disabled:border-gray-300 text-sm"
               >
-                {saving ? "Saving…" : canSave ? "💾 Save Record" : "✅ Continue"}
+                {saving ? "Saving…" : canSave ? "💾 Save Record" : "Continue"}
               </button>
             </div>
           ) : (

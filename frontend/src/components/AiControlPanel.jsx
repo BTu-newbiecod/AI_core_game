@@ -8,9 +8,9 @@ const lineColor = (log) => {
   return "text-slate-300";
 };
 
-export default function AiControlPanel({ onAiPlay, logs, disabled }) {
+export default function AiControlPanel({ onAiPlay, logs, disabled, isThinking }) {
   const logEndRef = useRef(null);
-  useEffect(() => { logEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs]);
+  useEffect(() => { logEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs, isThinking]);
 
   return (
     <div className="flex flex-col h-full gap-3">
@@ -39,15 +39,25 @@ export default function AiControlPanel({ onAiPlay, logs, disabled }) {
         <p className="text-emerald-400 font-bold mb-1 border-b border-[#30363d] pb-1 text-xs">
           ● Console
         </p>
-        {logs.length === 0
-          ? <p className="text-gray-600 italic">Waiting for AI input…</p>
-          : logs.map((log, i) => (
-            <p key={i} className={`leading-relaxed ${lineColor(log)}`}>
-              <span className="text-gray-600 mr-1 select-none">{String(i + 1).padStart(2, "0")}│</span>
-              {log}
-            </p>
-          ))
-        }
+        {logs.length === 0 && !isThinking && (
+          <p className="text-gray-600 italic">Waiting for AI input…</p>
+        )}
+        {logs.map((log, i) => (
+          <p key={i} className={`leading-relaxed ${lineColor(log)}`}>
+            <span className="text-gray-600 mr-1 select-none">{String(i + 1).padStart(2, "0")}│</span>
+            {log}
+          </p>
+        ))}
+        {isThinking && (
+          <p className="text-gray-500 italic flex items-center">
+            AI is thinking
+            <span className="flex ml-0.5 tracking-widest">
+              <span className="animate-pulse" style={{ animationDelay: "0ms" }}>.</span>
+              <span className="animate-pulse" style={{ animationDelay: "300ms" }}>.</span>
+              <span className="animate-pulse" style={{ animationDelay: "600ms" }}>.</span>
+            </span>
+          </p>
+        )}
         <div ref={logEndRef} />
       </div>
     </div>
