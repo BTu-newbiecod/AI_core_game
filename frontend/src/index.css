@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global font */
+* { font-family: 'Outfit', sans-serif; }
+
+@keyframes mine-pop {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  55%  { transform: scale(1.5) rotate(5deg);  opacity: 1; }
+  75%  { transform: scale(0.85) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+
+@keyframes flag-drop {
+  0%   { transform: translateY(-8px) rotate(-20deg); opacity: 0; }
+  60%  { transform: translateY(2px) rotate(5deg);    opacity: 1; }
+  100% { transform: translateY(0) rotate(0deg);      opacity: 1; }
+}
+
+.mine-pop  { animation: mine-pop  0.35s cubic-bezier(.36,.07,.19,.97) forwards; }
+.flag-drop { animation: flag-drop 0.3s ease-out forwards; }

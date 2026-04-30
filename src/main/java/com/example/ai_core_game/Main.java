@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        GameConfig config = DifficultyLevel.MEDIUM.toConfig(); //chon level
+        GameConfig config = DifficultyLevel.EASY.toConfig(); //chon level
         GameEngine engine = new GameEngine(config);
         Scanner scanner = new Scanner(System.in);
 

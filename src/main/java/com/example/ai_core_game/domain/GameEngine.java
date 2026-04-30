@@ -107,4 +107,8 @@ public class GameEngine {
     public int getRevealedSafeCellsCount() {
         return revealedSafeCellsCount;
     }
+
+    public GameConfig getConfig() {
+        return config;
+    }
 }
